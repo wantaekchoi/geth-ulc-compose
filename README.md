@@ -1,63 +1,66 @@
-# Ethereum Geth ULC (Ultra Light Clients)
+# Geth ULC Docker Compose
 
-This project allows you to deploy and manage an Ethereum Geth Ultra Light Client (ULC) using Docker.
+This project sets up a Dockerized instance of Geth (Go Ethereum) running in Ultra Light Client (ULC) mode.
 
-## Environment Variables
+## Prerequisites
 
-The username for the Geth user in the container can be specified by setting the `GETH_USER` environment variable before running the Docker Compose commands.
+- Docker and Docker-compose installed on your machine.
+- Understanding of Ethereum, Geth and Docker is recommended.
 
-In a UNIX-like environment, use `export` to set environment variables:
+## Setup Instructions
 
-```bash
-# Set the GETH_USER environment variable
-export GETH_USER=wantaek
-```
+1. Clone the repository:
 
-In a Windows environment, use `set`:
+   ```
+   git clone <repository-url>
+   ```
 
-```cmd
-REM Set the GETH_USER environment variable
-set GETH_USER=wantaek
-```
+1. Navigate to the cloned repository:
 
-Please replace `wantaek` with the username you want to use for the Geth user in the container.
+   ```
+   cd <repository-directory>
+   ```
 
-## Build
+1. Start the Docker service with a specified network. You can specify `--goerli`, `--mainnet` or `--sepolia` as a command line option to determine which network you would like to connect to:
 
-First, build the Docker image.
+   ```
+   # For Ethereum mainnet
+   EXTRA_OPTS='--mainnet' docker-compose up -d
 
-```bash
-docker compose build
-```
+   # For Görli network
+   EXTRA_OPTS='--goerli' docker-compose up -d
 
-You can optionally provide a username for the geth user by adding it as a build argument.
+   # For Sepolia network
+   EXTRA_OPTS='--sepolia' docker-compose up -d
+   ```
 
-```bash
-docker compose build --build-arg GETH_USER=$GETH_USER
-```
+The provided `docker-compose.yml` file configures a Geth instance in ULC mode, listening on HTTP, and connected to specified trusted ULC servers.
 
-## Run
-
-After the image has been built, you can start your node.
-
-```bash
-docker compose up
-```
-
-## Configuration
-
-The configuration can be checked using:
-
-```bash
-docker-compose config
-```
+You may replace the servers listed in `--ulc.servers` with addresses of your trusted servers.
 
 ## Ports
 
-The Ethereum Geth Node is exposed on port `8545` for HTTP based JSON-RPC
+The service exposes the following ports:
 
-and on port `30303` for P2P communication.
+- 8545: JSON-RPC HTTP interface
+- 30303: P2P network interface
 
-## Volumes
+## Persisting data
 
-The Ethereum data is persisted in a volume mounted at `./eth`.
+Blockchain data is persisted in a Docker volume mapped to `./eth` in your host system.
+
+## JSON-RPC APIs
+
+The service enables the following JSON-RPC APIs: `eth`, `net`, `web3`, `debug`, and `admin`.
+
+## Security
+
+Ensure to properly manage your Docker environment and restrict access to your system, as your Geth instance will allow external connections due to the `--http.addr=0.0.0.0` and `--http.vhosts=\*` settings. Consider additional security measures for production environments.
+
+## Notes
+
+This setup allows you to select the network for the Geth ULC client to connect to. You can specify --goerli, --mainnet or --sepolia using the EXTRA_OPTS environment variable while starting the docker service.
+
+## Contributing
+
+For any issues, questions, or suggestions for improvement, please open an issue in the GitHub issue tracker. Contributions are welcome.
