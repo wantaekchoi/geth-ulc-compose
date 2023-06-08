@@ -11,10 +11,12 @@ services:
         "--http.addr=0.0.0.0",
         "--http.vhosts=*",
         "--http.api=eth,net,web3,debug,admin",
-        "--mainnet",
         "--maxpeers=30",
-        "--datadir=/Users/fjl/Library/Ethereum"
+        "--datadir=/Users/fjl/Library/Ethereum",
+        "$EXTRA_OPTS"
       ]
+    environment:
+      - EXTRA_OPTS=
     ports:
       - 8545:8545
       - 30303:30303
